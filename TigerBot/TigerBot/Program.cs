@@ -6,6 +6,7 @@ using System;
 using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
+using TigerBot.Services;
 
 namespace TigerBot
 {
@@ -17,19 +18,21 @@ namespace TigerBot
         private string _token;
         private DiscordSocketClient _client;
         private CommandService _commands;
+        private BotCredentials _creds;
         private IServiceProvider _services;
-
-        public string placeholder;
 
         public async Task RunBotAsync()
         {
             _token = ConfigurationManager.AppSettings["Token"];
             _client = new DiscordSocketClient();
             _commands = new CommandService();
+            _creds = new BotCredentials();
             _services = new ServiceCollection()
                         .AddSingleton(_client)
                         .AddSingleton(_commands)
+                        .AddSingleton(_creds)
                         .BuildServiceProvider();
+                        
 
             string botToken = _token;
 
@@ -86,7 +89,7 @@ namespace TigerBot
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
 
                 if (!result.IsSuccess)
-                    Console.WriteLine(result.ErrorReason);
+                    Console.WriteLine(result.ErrorReason + "\n" + result.Error);
 
 
             }
