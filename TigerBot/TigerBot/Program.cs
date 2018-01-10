@@ -19,7 +19,7 @@ namespace TigerBot
         private DiscordSocketClient _client;
         private CommandService _commands;
         private IBotCredentials _creds;
-        private IGoogleAPIService _googapi;
+        private IGoogleApiService _googapi;
         private IServiceProvider _services;
 
         public async Task RunBotAsync()
@@ -92,7 +92,7 @@ namespace TigerBot
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
 
                 if (!result.IsSuccess)
-                    Console.WriteLine(result.ErrorReason + "\n" + result.Error);
+                    Console.WriteLine(result.ErrorReason + $"\nFull Error: {result.ToString()}" );
 
 
             }

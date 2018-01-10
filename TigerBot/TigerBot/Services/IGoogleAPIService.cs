@@ -6,7 +6,7 @@ using Google.Apis.Customsearch.v1.Data;
 
 namespace TigerBot.Services
 {
-    public interface IGoogleAPIService
+    public interface IGoogleApiService
     {
         Task<ImageResult> GetImageAsync(string query, int start = 1);
     }

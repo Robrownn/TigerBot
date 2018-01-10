@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TigerBot.Services
 {
-    public class GoogleApiService : IGoogleAPIService
+    public class GoogleApiService : IGoogleApiService
     {
         const string SEARCH_ENGINE_ID = "016977101793543495109:ntrr-sk-hcm";
 
@@ -36,7 +36,7 @@ namespace TigerBot.Services
             var request = _cs.Cse.List(query);
             request.Cx = SEARCH_ENGINE_ID;
             request.Num = 1;
-            request.Fields = "items(image(contextLink,thumbnailLink),link";
+            //request.Fields = "items(image(contextLink,thumbnailLink),link)";
             request.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
             request.Start = start;
 
