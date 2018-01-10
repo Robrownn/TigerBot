@@ -35,6 +35,7 @@ namespace TigerBot
 
             // Event Subscriptions
             _client.Log += Log;
+            _client.UserJoined += AnnounceUserJoined;
 
             // Register our commands
             await RegisterCommandsAsync();
@@ -47,6 +48,13 @@ namespace TigerBot
 
             // Keeps the bot from shutting off immediately
             await Task.Delay(-1);
+        }
+
+        private async Task AnnounceUserJoined(SocketGuildUser user)
+        {
+            var guild = user.Guild;
+            var channel = guild.DefaultChannel;
+            await channel.SendMessageAsync($"Welcome, {user.Mention}!");
         }
 
         private Task Log(LogMessage arg)
