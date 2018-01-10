@@ -41,7 +41,7 @@ namespace TigerBot.Modules
             }
             catch
             {
-                
+                Console.WriteLine("Image request failed.");
             }
         }
     }

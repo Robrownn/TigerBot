@@ -18,7 +18,8 @@ namespace TigerBot
         private string _token;
         private DiscordSocketClient _client;
         private CommandService _commands;
-        private BotCredentials _creds;
+        private IBotCredentials _creds;
+        private IGoogleAPIService _googapi;
         private IServiceProvider _services;
 
         public async Task RunBotAsync()
@@ -27,10 +28,12 @@ namespace TigerBot
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _creds = new BotCredentials();
+            _googapi = new GoogleApiService(_creds);
             _services = new ServiceCollection()
                         .AddSingleton(_client)
                         .AddSingleton(_commands)
                         .AddSingleton(_creds)
+                        .AddSingleton(_googapi)
                         .BuildServiceProvider();
                         
 
