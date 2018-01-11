@@ -36,7 +36,7 @@ namespace TigerBot.Modules
             //    .WithColor(Color.Blue)
             //    .WithTitle($"Imgur Search for: {terms}");
 
-            await ReplyAsync($"Imgur Search for {terms}: {result.link}");
+            await ReplyAsync($"Imgur Search for `{terms}`: {result.link}");
 
 
         }
