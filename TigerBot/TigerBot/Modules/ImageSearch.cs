@@ -1,23 +1,24 @@
 ﻿using Discord;
 using Discord.Commands;
+using Google.Apis.Customsearch.v1;
+using Google.Apis.Customsearch.v1.Data;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using TigerBot.Services;
+using static Google.Apis.Customsearch.v1.Data.Result;
 
 namespace TigerBot.Modules
 {
     public class ImageSearch : ModuleBase<SocketCommandContext>
     {
-        private IBotCredentials _creds;
-        private IGoogleApiService _google;
+        private CustomsearchService _cs;
 
-        public ImageSearch(IBotCredentials creds, IGoogleApiService google)
+        public ImageSearch(CustomsearchService cs)
         {
-            _creds = creds;
-            _google = google;
+            _cs = cs;
         }
 
 
@@ -29,16 +30,39 @@ namespace TigerBot.Modules
 
             terms = WebUtility.UrlEncode(terms).Replace(' ', '+');
 
-            var result = await _google.GetImageAsync(terms).ConfigureAwait(false);
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
-                .WithDescription(result.Link)
-                .WithImageUrl(result.Link)
-                .WithTitle(Context.User.ToString());
+            var result = await SearchGoogleAsync(terms);
 
-            await ReplyAsync("", false, embed);
+            //var embed = new EmbedBuilder()
+            //    .WithColor(Color.Blue)
+            //    .WithTitle($"Imgur Search for: {terms}");
+
+            await ReplyAsync($"Imgur Search for {terms}: {result.link}");
 
 
+        }
+
+        private async Task<ImageResult> SearchGoogleAsync(string terms)
+        {
+            var request = _cs.Cse.List(terms);
+            request.Cx = ConfigurationManager.AppSettings["seID"];
+
+            var result = await request.ExecuteAsync();
+             
+            int rand = new Random().Next(0,10);
+
+            return new ImageResult(result.Items[rand].Image, result.Items[rand].Link);
+        }
+
+        public struct ImageResult
+        {
+            public ImageData image;
+            public string link;
+
+            public ImageResult(ImageData image, string link)
+            {
+                this.image = image;
+                this.link = link;
+            }
         }
     }
 }

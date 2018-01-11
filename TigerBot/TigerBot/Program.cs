@@ -1,12 +1,13 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Google.Apis.Customsearch.v1;
+using Google.Apis.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
-using TigerBot.Services;
 
 namespace TigerBot
 {
@@ -16,25 +17,27 @@ namespace TigerBot
         
 
         private string _token;
+        private string _googleToken;
         private DiscordSocketClient _client;
         private CommandService _commands;
-        private IBotCredentials _creds;
-        private IGoogleApiService _googapi;
         private IServiceProvider _services;
 
         public async Task RunBotAsync()
         {
-            _token = ConfigurationManager.AppSettings["Token"];
+            _token = ConfigurationManager.AppSettings["discord"];
+            _googleToken = ConfigurationManager.AppSettings["google"];
             _client = new DiscordSocketClient();
             _commands = new CommandService();
-            _creds = new BotCredentials();
-            _googapi = new GoogleApiService(_creds);
             _services = new ServiceCollection()
                         .AddSingleton(_client)
                         .AddSingleton(_commands)
-                        .AddSingleton(_creds)
-                        .AddSingleton(_googapi)
+                        .AddSingleton(new CustomsearchService(new BaseClientService.Initializer()
+                        {
+                            ApiKey = _googleToken,
+                            MaxUrlLength = 256
+                        }))
                         .BuildServiceProvider();
+            
                         
 
             string botToken = _token;
