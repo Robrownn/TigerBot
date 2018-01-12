@@ -1,12 +1,8 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Google.Apis.Customsearch.v1;
-using Google.Apis.Customsearch.v1.Data;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using static Google.Apis.Customsearch.v1.Data.Result;
 

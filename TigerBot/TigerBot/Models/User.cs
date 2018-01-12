@@ -1,13 +1,12 @@
-﻿using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TigerBot.Models
 {
     public class User
     {
         public int Id { get; set; }
-        public SocketGuildUser socketGuildUser { get; set; }
+
+        [Required, MaxLength(80)]
+        public string userName { get; set; }
     }
 }

@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TigerBot.Models;
 
 namespace TigerBot.Services
 {
     public interface IGameService
     {
-        IEnumerable<Game> GetAll();
-        Game Add(Game newGame);
-        Game Update(Game game);
+        IEnumerable<TigerGame> GetAll();
+        TigerGame Add(TigerGame newGame);
+        TigerGame Update(TigerGame game);
     }
 }

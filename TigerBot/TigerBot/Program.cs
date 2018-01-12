@@ -8,6 +8,8 @@ using System;
 using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
+using TigerBot.Models;
+using TigerBot.Services;
 
 namespace TigerBot
 {
@@ -20,6 +22,8 @@ namespace TigerBot
         private string _googleToken;
         private DiscordSocketClient _client;
         private CommandService _commands;
+        private IUserService _users;
+        private IGameService _games;
         private IServiceProvider _services;
 
         public async Task RunBotAsync()
@@ -63,6 +67,9 @@ namespace TigerBot
         {
             var guild = user.Guild;
             var channel = guild.DefaultChannel;
+            var newUser = new User();
+            newUser.userName = user.Mention;
+            _users.Add(newUser);
             await channel.SendMessageAsync($"Welcome, {user.Mention}!");
         }
 

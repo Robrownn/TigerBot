@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TigerBot.Models;
 
 namespace TigerBot.Data
@@ -15,5 +12,6 @@ namespace TigerBot.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<TigerGame> Games { get; set; }
+        public DbSet<UserGame> UserGames { get; set; }
     }
 }
