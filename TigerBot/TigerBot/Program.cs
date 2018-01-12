@@ -67,8 +67,10 @@ namespace TigerBot
         {
             var guild = user.Guild;
             var channel = guild.DefaultChannel;
-            var newUser = new User();
-            newUser.userName = user.Mention;
+            var newUser = new User
+            {
+                userName = user.Mention
+            };
             _users.Add(newUser);
             await channel.SendMessageAsync($"Welcome, {user.Mention}!");
         }
