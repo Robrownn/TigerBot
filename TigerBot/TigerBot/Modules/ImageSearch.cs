@@ -28,15 +28,15 @@ namespace TigerBot.Modules
 
             terms = terms?.Trim();
 
-            terms = WebUtility.UrlEncode(terms).Replace(' ', '+');
+            string urlterms = WebUtility.UrlEncode(terms).Replace(' ', '+');
 
-            var result = await SearchGoogleAsync(terms);
+            var result = await SearchGoogleAsync(urlterms);
 
             //var embed = new EmbedBuilder()
             //    .WithColor(Color.Blue)
             //    .WithTitle($"Imgur Search for: {terms}");
 
-            await ReplyAsync($"Imgur Search for {terms}: {result.link}");
+            await ReplyAsync($"Imgur Search for `{terms}`: {result.link}");
 
 
         }
