@@ -8,8 +8,10 @@ using System;
 using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
+using TigerBot.Data;
 using TigerBot.Models;
 using TigerBot.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace TigerBot
 {
@@ -35,6 +37,8 @@ namespace TigerBot
             _services = new ServiceCollection()
                         .AddSingleton(_client)
                         .AddSingleton(_commands)
+                        .AddScoped<IUserService, UserService>()
+                        .AddScoped<IGameService, GameService>()
                         .AddSingleton(new CustomsearchService(new BaseClientService.Initializer()
                         {
                             ApiKey = _googleToken,
