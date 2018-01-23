@@ -44,6 +44,7 @@ namespace TigerBot
                             ApiKey = _googleToken,
                             MaxUrlLength = 256
                         }))
+                        .AddDbContext<TigerBotDbContext>(ServiceLifetime.Transient)
                         .BuildServiceProvider();
             
                         
