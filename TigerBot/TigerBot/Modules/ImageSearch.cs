@@ -41,10 +41,11 @@ namespace TigerBot.Modules
         {
             var request = _cs.Cse.List(terms);
             request.Cx = ConfigurationManager.AppSettings["seID"];
+            request.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
 
             var result = await request.ExecuteAsync();
              
-            int rand = new Random().Next(0,10);
+            int rand = new Random().Next(0,99);
 
             return new ImageResult(result.Items[rand].Image, result.Items[rand].Link);
         }
