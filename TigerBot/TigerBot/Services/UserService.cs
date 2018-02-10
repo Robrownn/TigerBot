@@ -26,7 +26,7 @@ namespace TigerBot.Services
 
         public IEnumerable<User> GetAll()
         {
-            return _context.Users.OrderBy(u => u.userName);
+            return _context.Users.OrderBy(u => u.UserName);
         }
 
         public User Update(User user)

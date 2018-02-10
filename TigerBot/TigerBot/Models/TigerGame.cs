@@ -7,6 +7,6 @@ namespace TigerBot.Models
         public int Id { get; set; }
 
         [Required, MaxLength(80)]
-        public string gameName { get; set; }
+        public string GameName { get; set; }
     }
 }

@@ -7,9 +7,9 @@ namespace TigerBot.Models
         public int Id { get; set; }
 
         [Required]
-        public int gameID { get; set; }
+        public int GameID { get; set; }
 
         [Required]
-        public int userID { get; set; }
+        public int UserID { get; set; }
     }
 }

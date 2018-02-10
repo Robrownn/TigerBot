@@ -32,7 +32,7 @@ namespace TigerBot.Services
 
         IEnumerable<TigerGame> IGameService.GetAll()
         {
-            return _context.Games.OrderBy(g => g.gameName);
+            return _context.Games.OrderBy(g => g.GameName);
         }
     }
 }

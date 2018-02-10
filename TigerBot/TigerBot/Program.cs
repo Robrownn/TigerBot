@@ -17,7 +17,9 @@ namespace TigerBot
 {
     class Program
     {
-        static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
+        static void Main(string[] args) => new Program().RunBotAsync()
+                                                        .GetAwaiter()
+                                                        .GetResult();
         
 
         private string _token;
@@ -33,7 +35,7 @@ namespace TigerBot
         {
             _token = ConfigurationManager.AppSettings["discord"];
             _googleToken = ConfigurationManager.AppSettings["google"];
-            _conn = ConfigurationManager.ConnectionStrings["TigerBot"].ToString();
+            _conn = ConfigurationManager.ConnectionStrings["TigerBot"].ConnectionString;
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection()
@@ -76,7 +78,7 @@ namespace TigerBot
             var channel = guild.DefaultChannel;
             var newUser = new User
             {
-                userName = user.Mention
+                UserName = user.Mention
             };
             _users.Add(newUser);
             await channel.SendMessageAsync($"Welcome, {user.Mention}!");
