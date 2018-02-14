@@ -10,5 +10,6 @@ namespace TigerBot.Services
         IEnumerable<User> GetAll();
         User Add(User newUser);
         User Update(User user);
+        User Get(User user);
     }
 }

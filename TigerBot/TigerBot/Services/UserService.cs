@@ -24,6 +24,11 @@ namespace TigerBot.Services
             return newUser;
         }
 
+        public User Get(User user)
+        {
+            return _context.Users.First(u => u.UserName == user.UserName);
+        }
+
         public IEnumerable<User> GetAll()
         {
             return _context.Users.OrderBy(u => u.UserName);

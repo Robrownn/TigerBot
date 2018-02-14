@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Discord;
+using System.ComponentModel.DataAnnotations;
 
 namespace TigerBot.Models
 {
@@ -7,6 +8,6 @@ namespace TigerBot.Models
         public int Id { get; set; }
 
         [Required, MaxLength(80)]
-        public string GameName { get; set; }
+        public Game? GameName { get; set; }
     }
 }

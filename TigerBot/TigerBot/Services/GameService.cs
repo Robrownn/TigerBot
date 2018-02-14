@@ -25,6 +25,11 @@ namespace TigerBot.Services
             return newGame;
         }
 
+        public TigerGame Get(TigerGame game)
+        {
+            return _context.Games.First(g => g.GameName.Equals(game.GameName));
+        }
+
         public TigerGame Update(TigerGame game)
         {
             throw new NotImplementedException();

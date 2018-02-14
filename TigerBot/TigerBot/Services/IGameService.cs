@@ -11,5 +11,6 @@ namespace TigerBot.Services
         IEnumerable<TigerGame> GetAll();
         TigerGame Add(TigerGame newGame);
         TigerGame Update(TigerGame game);
+        TigerGame Get(TigerGame game);
     }
 }

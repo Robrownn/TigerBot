@@ -63,6 +63,16 @@ namespace TigerBot
             // Event Subscriptions
             _client.Log += Log;
             _client.UserJoined += AnnounceUserJoined;
+            _client.GuildMemberUpdated += async (s, e) =>
+            {
+                // Check if User exists in User Table. Add user if false.
+                if (!UserExists(e))
+                    await AddUserToUserTable(e);
+                // Check if Game exists in Game Table. Add game if false.
+                if (!GameExists(e))
+                    await AddGameToGameTable(e);
+                // Check if UserGame exists in UserGameTable. Add combo if false.
+            };
 
             // Register our commands
             await RegisterCommandsAsync();
@@ -122,6 +132,59 @@ namespace TigerBot
 
 
             }
+        }
+
+        private async Task AddUserToUserTable(SocketGuildUser user)
+        {
+            var newUser = new User
+            {
+                UserName = user.Mention
+            };
+            _users.Add(newUser);
+
+            await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added user to table.", $"Added {newUser.UserName}!"));
+        }
+
+        private bool UserExists(SocketGuildUser user)
+        {
+            var newUser = new User
+            {
+                UserName = user.Mention
+            };
+
+            if (_users.Get(newUser) != null)
+                return true;
+
+            return false;
+        }
+
+        private async Task AddGameToGameTable(SocketGuildUser game)
+        {
+            var newGame = new TigerGame
+            {
+                GameName = game.Game
+            };
+            _games.Add(newGame);
+
+            await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added game to table", $"Added {newGame.GameName}!"));
+        }
+
+        private bool GameExists(SocketGuildUser game)
+        {
+            var newGame = new TigerGame
+            {
+                GameName = game.Game
+            };
+
+            if (_games.Get(newGame) != null)
+                return true;
+
+            return false;
+        }
+
+        private LogMessage CreateLogMessage(LogSeverity logSeverity, string source, string message)
+        {
+            return new LogMessage(logSeverity, source, message);
         }
     }
 }
