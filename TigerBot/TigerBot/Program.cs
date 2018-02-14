@@ -136,13 +136,20 @@ namespace TigerBot
 
         private async Task AddUserToUserTable(SocketGuildUser user)
         {
-            var newUser = new User
+            try
             {
-                UserName = user.Mention
-            };
-            _users.Add(newUser);
+                var newUser = new User
+                {
+                    UserName = user.Mention
+                };
+                _users.Add(newUser);
+            }catch (Exception ex)
+            {
+                
+            }
+            
 
-            await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added user to table.", $"Added {newUser.UserName}!"));
+            //_client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added user to table.", $"Added {newUser.UserName}!"));
         }
 
         private bool UserExists(SocketGuildUser user)
@@ -160,13 +167,20 @@ namespace TigerBot
 
         private async Task AddGameToGameTable(SocketGuildUser game)
         {
-            var newGame = new TigerGame
+            try
             {
-                GameName = game.Game
-            };
-            _games.Add(newGame);
+                var newGame = new TigerGame
+                {
+                    GameName = game.Game
+                };
+                _games.Add(newGame);
+            }catch (Exception ex)
+            {
 
-            await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added game to table", $"Added {newGame.GameName}!"));
+            }
+            
+
+            //await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added game to table", $"Added {newGame.GameName}!"));
         }
 
         private bool GameExists(SocketGuildUser game)
