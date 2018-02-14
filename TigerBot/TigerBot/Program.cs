@@ -143,13 +143,12 @@ namespace TigerBot
                     UserName = user.Mention
                 };
                 _users.Add(newUser);
+
+                await Log(CreateLogMessage(LogSeverity.Info, "Add user to user table", $"Added {newUser.UserName}"));
             }catch (Exception ex)
             {
-                
+                await Log(CreateLogMessage(LogSeverity.Critical, $"{ex.Source}", $"Exception: {ex.Message}"));
             }
-            
-
-            //_client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added user to table.", $"Added {newUser.UserName}!"));
         }
 
         private bool UserExists(SocketGuildUser user)
@@ -171,23 +170,23 @@ namespace TigerBot
             {
                 var newGame = new TigerGame
                 {
-                    GameName = game.Game
+                    GameName = game.Game.ToString()
                 };
                 _games.Add(newGame);
-            }catch (Exception ex)
-            {
 
+                await Log(CreateLogMessage(LogSeverity.Info, "Add game to game table", $"Added {newGame.GameName}"));
             }
-            
-
-            //await _client.Log += Log(CreateLogMessage(LogSeverity.Info, "Added game to table", $"Added {newGame.GameName}!"));
+            catch (Exception ex)
+            {
+                await Log(CreateLogMessage(LogSeverity.Critical, $"{ex.Source}", $"Exception: {ex.Message}"));
+            }
         }
 
         private bool GameExists(SocketGuildUser game)
         {
             var newGame = new TigerGame
             {
-                GameName = game.Game
+                GameName = game.Game.ToString()
             };
 
             if (_games.Get(newGame) != null)
