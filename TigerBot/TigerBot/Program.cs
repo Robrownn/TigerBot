@@ -5,13 +5,14 @@ using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
 using TigerBot.Data;
 using TigerBot.Models;
 using TigerBot.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace TigerBot
 {
@@ -20,11 +21,10 @@ namespace TigerBot
         static void Main(string[] args) => new Program().RunBotAsync()
                                                         .GetAwaiter()
                                                         .GetResult();
-        
 
+        private IConfigurationRoot _config;
         private string _token;
         private string _googleToken;
-        private String _conn;
         private DiscordSocketClient _client;
         private CommandService _commands;
         private IUserService _users;
@@ -33,9 +33,14 @@ namespace TigerBot
 
         public async Task RunBotAsync()
         {
-            _token = ConfigurationManager.AppSettings["discord"];
-            _googleToken = ConfigurationManager.AppSettings["google"];
-            _conn = ConfigurationManager.ConnectionStrings["TigerBot"].ConnectionString;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Environment.CurrentDirectory)
+                .AddJsonFile("_configuration.json");
+            _config = builder.Build();
+
+            _token = _config["Discord"];                             
+            _googleToken = _config["Google"];                        
+            //_conn = _config.GetConnectionString("TigerBot");           
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection()
@@ -48,7 +53,7 @@ namespace TigerBot
                             ApiKey = _googleToken,
                             MaxUrlLength = 256
                         }))
-                        .AddDbContext<TigerBotDbContext>(options => options.UseSqlServer(_conn))
+                        .AddDbContext<TigerBotDbContext>()
                         .BuildServiceProvider();
             
                         

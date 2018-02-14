@@ -1,7 +1,9 @@
 ﻿using Discord.Commands;
 using Google.Apis.Customsearch.v1;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Configuration;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using static Google.Apis.Customsearch.v1.Data.Result;
@@ -39,13 +41,19 @@ namespace TigerBot.Modules
 
         private async Task<ImageResult> SearchGoogleAsync(string terms)
         {
+            IConfigurationRoot config;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Environment.CurrentDirectory)
+                .AddJsonFile("_configuration.json");
+            config = builder.Build();
+
             var request = _cs.Cse.List(terms);
-            request.Cx = ConfigurationManager.AppSettings["seID"];
+            request.Cx = config["seID"];
             request.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
 
             var result = await request.ExecuteAsync();
              
-            int rand = new Random().Next(0,99);
+            int rand = new Random().Next(0,19);
 
             return new ImageResult(result.Items[rand].Image, result.Items[rand].Link);
         }
