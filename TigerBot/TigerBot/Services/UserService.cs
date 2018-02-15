@@ -26,7 +26,7 @@ namespace TigerBot.Services
 
         public User Get(User user)
         {
-            return _context.Users.First(u => u.UserName == user.UserName);
+            return _context.Users.FirstOrDefault(u => u.UserName == user.UserName);
         }
 
         public IEnumerable<User> GetAll()

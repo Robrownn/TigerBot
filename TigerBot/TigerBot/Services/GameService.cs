@@ -27,7 +27,7 @@ namespace TigerBot.Services
 
         public TigerGame Get(TigerGame game)
         {
-            return _context.Games.First(g => g.GameName.Equals(game.GameName));
+            return _context.Games.FirstOrDefault(g => g.GameName.Equals(game.GameName));
         }
 
         public TigerGame Update(TigerGame game)
