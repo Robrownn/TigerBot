@@ -25,11 +25,12 @@ namespace TigerBot
         private IConfigurationRoot _config;
         private string _token;
         private string _googleToken;
+        private string _conn;
         private DiscordSocketClient _client;
         private CommandService _commands;
+        private IServiceProvider _services;
         private IUserService _users;
         private IGameService _games;
-        private IServiceProvider _services;
 
         public async Task RunBotAsync()
         {
@@ -37,10 +38,10 @@ namespace TigerBot
                 .SetBasePath(Environment.CurrentDirectory)
                 .AddJsonFile("_configuration.json");
             _config = builder.Build();
-
+        
             _token = _config["Discord"];                             
             _googleToken = _config["Google"];                        
-            //_conn = _config.GetConnectionString("TigerBot");           
+            _conn = _config.GetConnectionString("TigerBot");           
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection()
@@ -53,9 +54,11 @@ namespace TigerBot
                             ApiKey = _googleToken,
                             MaxUrlLength = 256
                         }))
-                        .AddDbContext<TigerBotDbContext>()
+                        .AddDbContext<TigerBotDbContext>(options => options.UseSqlServer(_conn))
                         .BuildServiceProvider();
-            
+
+            _users = _services.GetRequiredService<IUserService>();
+            _games = _services.GetRequiredService<IGameService>();
                         
 
             string botToken = _token;
@@ -63,14 +66,17 @@ namespace TigerBot
             // Event Subscriptions
             _client.Log += Log;
             _client.UserJoined += AnnounceUserJoined;
-            _client.GuildMemberUpdated += async (s, e) =>
+            _client.GuildMemberUpdated += async (x, y) =>
             {
                 // Check if User exists in User Table. Add user if false.
-                if (!UserExists(e))
-                    await AddUserToUserTable(e);
+                bool uExist = await UserExists(y);
+                bool gExist = await GameExists(y);
+
+                if (!uExist)
+                    await AddUserToUserTable(y);
                 // Check if Game exists in Game Table. Add game if false.
-                if (!GameExists(e))
-                    await AddGameToGameTable(e);
+                if (!gExist)
+                    await AddGameToGameTable(y);
                 // Check if UserGame exists in UserGameTable. Add combo if false.
             };
 
@@ -151,7 +157,7 @@ namespace TigerBot
             }
         }
 
-        private bool UserExists(SocketGuildUser user)
+        private async Task<bool> UserExists(SocketGuildUser user)
         {
             var newUser = new User
             {
@@ -182,7 +188,7 @@ namespace TigerBot
             }
         }
 
-        private bool GameExists(SocketGuildUser game)
+        private async Task<bool> GameExists(SocketGuildUser game)
         {
             var newGame = new TigerGame
             {
