@@ -71,6 +71,7 @@ namespace TigerBot
                 // Check if User exists in User Table. Add user if false.
                 bool uExist = await UserExists(y);
                 bool gExist = await GameExists(y);
+                bool ugExist = await UserGameExists(y);
 
                 if (!uExist)
                     await AddUserToUserTable(y);
@@ -91,6 +92,27 @@ namespace TigerBot
 
             // Keeps the bot from shutting off immediately
             await Task.Delay(-1);
+        }
+
+        private Task<bool> UserGameExists(SocketGuildUser y)
+        {
+            var newUser = new User
+            {
+                UserName = y.Mention
+            };
+
+            var newGame = new TigerGame
+            {
+                GameName = y.Game.ToString()
+            };
+
+            var ExistingUser = _users.Get(newUser);
+            var ExistingGame = _games.Get(newGame);
+
+            if (ExistingUser != null && ExistingGame != null)
+            {
+
+            }
         }
 
         private async Task AnnounceUserJoined(SocketGuildUser user)
