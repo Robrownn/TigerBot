@@ -68,7 +68,7 @@ namespace TigerBot
             // Event Subscriptions
             _client.Log += Log;
             _client.UserJoined += AnnounceUserJoined;
-            _client.GuildMemberUpdated += async (x, y) =>
+            _client.GuildMemberUpdated += async (x, y) => // Everytime a user state changes this event is fired.
             {
                 // Check if User exists in User Table. Add user if false.
                 bool uExist = await UserExists(y);
@@ -105,6 +105,7 @@ namespace TigerBot
         {
             try
             {
+                // Create an ad-hoc user and game
                 var newUser = new User
                 {
                     UserName = y.Mention
@@ -114,6 +115,7 @@ namespace TigerBot
                     GameName = y.Game.ToString()
                 };
 
+                // get the actual user and game. These values have to be present in order to make the game.
                 var user = _users.Get(newUser);
                 var game = _games.Get(newGame);
 
