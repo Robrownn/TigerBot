@@ -87,7 +87,19 @@ namespace TigerBot.Services
 
         public IQueryable<UserGame> GetUsersGames(User user)
         {
-            throw new NotImplementedException();
+            var selectedUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
+
+            if (selectedUser != null)
+            {
+                var newUserGame = new UserGame
+                {
+                    UserID = selectedUser.Id
+                };
+
+                return _context.UserGames.Where(ug => ug.UserID == newUserGame.UserID).OrderBy(ug => ug.UserID == newUserGame.UserID);
+            }
+
+            return null;
         }
     }
 }
