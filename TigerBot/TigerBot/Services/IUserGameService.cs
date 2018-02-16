@@ -11,5 +11,6 @@ namespace TigerBot.Services
         UserGame Add(User user, TigerGame game);
         IQueryable<UserGame> GetUsersGames(User user);
         IQueryable<UserGame> GetGameUsers(TigerGame game);
+        UserGame Get(User user, TigerGame game);
     }
 }

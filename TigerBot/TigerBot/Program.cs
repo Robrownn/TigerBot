@@ -12,7 +12,6 @@ using TigerBot.Models;
 using TigerBot.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace TigerBot
 {
@@ -31,6 +30,7 @@ namespace TigerBot
         private IServiceProvider _services;
         private IUserService _users;
         private IGameService _games;
+        private IUserGameService _ug;
 
         public async Task RunBotAsync()
         {
@@ -49,6 +49,7 @@ namespace TigerBot
                         .AddSingleton(_commands)
                         .AddScoped<IUserService, UserService>()
                         .AddScoped<IGameService, GameService>()
+                        .AddScoped<IUserGameService, UserGameService>()
                         .AddSingleton(new CustomsearchService(new BaseClientService.Initializer()
                         {
                             ApiKey = _googleToken,
@@ -59,6 +60,7 @@ namespace TigerBot
 
             _users = _services.GetRequiredService<IUserService>();
             _games = _services.GetRequiredService<IGameService>();
+            _ug = _services.GetRequiredService<IUserGameService>();
                         
 
             string botToken = _token;
@@ -70,15 +72,20 @@ namespace TigerBot
             {
                 // Check if User exists in User Table. Add user if false.
                 bool uExist = await UserExists(y);
-                bool gExist = await GameExists(y);
-                bool ugExist = await UserGameExists(y);
 
+                // Check if Game exists in Game Table. Add game if false.
+                bool gExist = await GameExists(y);
+                
                 if (!uExist)
                     await AddUserToUserTable(y);
-                // Check if Game exists in Game Table. Add game if false.
+                
                 if (!gExist)
                     await AddGameToGameTable(y);
+
                 // Check if UserGame exists in UserGameTable. Add combo if false.
+                bool ugExist = await UserGameExists(y);
+                if (!ugExist)
+                    await AddUserGame(y);
             };
 
             // Register our commands
@@ -94,7 +101,34 @@ namespace TigerBot
             await Task.Delay(-1);
         }
 
-        private Task<bool> UserGameExists(SocketGuildUser y)
+        private async Task AddUserGame(SocketGuildUser y)
+        {
+            try
+            {
+                var newUser = new User
+                {
+                    UserName = y.Mention
+                };
+                var newGame = new TigerGame
+                {
+                    GameName = y.Game.ToString()
+                };
+
+                var user = _users.Get(newUser);
+                var game = _games.Get(newGame);
+
+                if (user != null && game != null)
+                    _ug.Add(user, game);
+
+                await Log(CreateLogMessage(LogSeverity.Info, "Add usergame to usergame table", $"Added {newUser.UserName}, {newGame.GameName}."));
+            }
+            catch(Exception ex)
+            {
+                await Log(CreateLogMessage(LogSeverity.Critical, $"{ex.Source}", $"Exception: {ex.Message}"));
+            }
+        }
+
+        private async Task<bool> UserGameExists(SocketGuildUser y)
         {
             var newUser = new User
             {
@@ -109,10 +143,14 @@ namespace TigerBot
             var ExistingUser = _users.Get(newUser);
             var ExistingGame = _games.Get(newGame);
 
-            if (ExistingUser != null && ExistingGame != null)
-            {
+            if (ExistingUser is null) throw new UserNotFoundException("User not found!");
+            if (ExistingGame is null) throw new GameNotFoundException("Game not found!");
 
-            }
+            
+            if (_ug.Get(ExistingUser, ExistingGame) is null)
+                return false;
+
+            return true;
         }
 
         private async Task AnnounceUserJoined(SocketGuildUser user)
@@ -226,6 +264,42 @@ namespace TigerBot
         private LogMessage CreateLogMessage(LogSeverity logSeverity, string source, string message)
         {
             return new LogMessage(logSeverity, source, message);
+        }
+    }
+
+    public class UserNotFoundException : Exception
+    {
+        public UserNotFoundException()
+        {
+
+        }
+
+        public UserNotFoundException(string message) : base(message)
+        {
+
+        }
+
+        public UserNotFoundException(string message, Exception inner) : base(message,inner)
+        {
+
+        }
+    }
+
+    public class GameNotFoundException : Exception
+    {
+        public GameNotFoundException()
+        {
+
+        }
+
+        public GameNotFoundException(string message) : base(message)
+        {
+
+        }
+
+        public GameNotFoundException(string message, Exception inner) : base(message,inner)
+        {
+
         }
     }
 }

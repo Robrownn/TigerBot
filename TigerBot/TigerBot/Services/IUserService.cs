@@ -11,5 +11,6 @@ namespace TigerBot.Services
         User Add(User newUser);
         User Update(User user);
         User Get(User user);
+        User GetById(User user);
     }
 }

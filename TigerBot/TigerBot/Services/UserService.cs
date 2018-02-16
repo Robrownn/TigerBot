@@ -34,6 +34,11 @@ namespace TigerBot.Services
             return _context.Users.OrderBy(u => u.UserName);
         }
 
+        public User GetById(User user)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id == user.Id);
+        }
+
         public User Update(User user)
         {
             throw new NotImplementedException();
