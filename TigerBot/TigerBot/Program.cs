@@ -79,12 +79,12 @@ namespace TigerBot
                 if (!uExist)
                     await AddUserToUserTable(y);
                 
-                if (!gExist)
+                if (!gExist && y.Game.HasValue)
                     await AddGameToGameTable(y);
 
                 // Check if UserGame exists in UserGameTable. Add combo if false.
                 bool ugExist = await UserGameExists(y);
-                if (!ugExist)
+                if (!ugExist && y.Game.HasValue)
                     await AddUserGame(y);
             };
 
@@ -119,8 +119,9 @@ namespace TigerBot
                 var user = _users.Get(newUser);
                 var game = _games.Get(newGame);
 
-                if (user != null && game != null)
-                    _ug.Add(user, game);
+                if (user == null) throw new UserNotFoundException($"{newUser.UserName} not found.");
+                if (game == null) throw new GameNotFoundException($"{newGame.GameName} not found.");
+                _ug.Add(user, game);
 
                 await Log(CreateLogMessage(LogSeverity.Info, "Add usergame to usergame table", $"Added {newUser.UserName}, {newGame.GameName}."));
             }
@@ -145,8 +146,8 @@ namespace TigerBot
             var ExistingUser = _users.Get(newUser);
             var ExistingGame = _games.Get(newGame);
 
-            if (ExistingUser is null) throw new UserNotFoundException("User not found!");
-            if (ExistingGame is null) throw new GameNotFoundException("Game not found!");
+            if (ExistingUser == null) throw new UserNotFoundException("User not found!");
+            if (ExistingGame == null) throw new GameNotFoundException("Game not found!");
 
             
             if (_ug.Get(ExistingUser, ExistingGame) is null)

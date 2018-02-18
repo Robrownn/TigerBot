@@ -12,5 +12,6 @@ namespace TigerBot.Services
         TigerGame Add(TigerGame newGame);
         TigerGame Update(TigerGame game);
         TigerGame Get(TigerGame game);
+        TigerGame GetGameById(TigerGame game);
     }
 }

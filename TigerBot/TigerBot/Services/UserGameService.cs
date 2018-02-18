@@ -58,7 +58,7 @@ namespace TigerBot.Services
                         GameID = selectedGame.Id
                     };
 
-                    return _context.UserGames.FirstOrDefault(ug => ug.Equals(newUserGame));
+                    return _context.UserGames.FirstOrDefault(ug => ug.GameID == newUserGame.GameID && ug.UserID == newUserGame.UserID);
                 }catch (Exception ex)
                 {
                     Console.WriteLine($"{ex.Source}: {ex.Message}");
@@ -71,6 +71,23 @@ namespace TigerBot.Services
         public IQueryable<UserGame> GetGameUsers(TigerGame game)
         {
             var selectedGame = _context.Games.Where(g => g.GameName == game.GameName).FirstOrDefault();
+
+            if (selectedGame != null)
+            {
+                var newUserGame = new UserGame
+                {
+                    GameID = selectedGame.Id
+                };
+
+                return _context.UserGames.Where(ug => ug.GameID == newUserGame.GameID).OrderBy(ug => ug.GameID == newUserGame.GameID);
+            }
+
+            return null;
+        }
+
+        public IQueryable<UserGame> GetGameUsersLoose(TigerGame game)
+        {
+            var selectedGame = _context.Games.Where(g => g.GameName.Contains(game.GameName)).FirstOrDefault();
 
             if (selectedGame != null)
             {

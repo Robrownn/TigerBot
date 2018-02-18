@@ -30,6 +30,11 @@ namespace TigerBot.Services
             return _context.Games.FirstOrDefault(g => g.GameName.Equals(game.GameName));
         }
 
+        public TigerGame GetGameById(TigerGame game)
+        {
+            return _context.Games.FirstOrDefault(g => g.Id == game.Id);
+        }
+
         public TigerGame Update(TigerGame game)
         {
             throw new NotImplementedException();

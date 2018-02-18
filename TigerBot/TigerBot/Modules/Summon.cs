@@ -14,13 +14,16 @@ namespace TigerBot.Modules
     {
         private IUserService _users;
         private IUserGameService _userGames;
+        private IGameService _games;
 
         // Summon will summon people who have played a specified game before.
         public Summon(IUserGameService userGames,   // userGames has a function to return all game user id's
-                      IUserService users)           // we will use the user service to grab all the usernames of the corresponding users
+                      IUserService users,           // we will use the user service to grab all the usernames of the corresponding users id
+                      IGameService games)           // we will use the game service to grab all the gamenames of the corresponding game id           
         {
             _users = users;
             _userGames = userGames;
+            _games = games;
         }
 
         [Command("summon")]
@@ -33,7 +36,7 @@ namespace TigerBot.Modules
             };
 
             // Now that we have our ad-hoc game we are going to search the usergame table for the corresponding game and return all the users who have played that game
-            var selectedUsers = _userGames.GetGameUsers(newGame);
+            var selectedUsers = _userGames.GetGameUsersLoose(newGame);
             List<string> users = new List<string>();
 
             // We have our list of users but we only have them by Id. We need to grab their usernames to add them to the message string.
@@ -66,6 +69,42 @@ namespace TigerBot.Modules
             });
 
             // We then send the message as a string.
+            await ReplyAsync(message.ToString());
+        }
+
+        [Command("games")]
+        public async Task ListGames([Remainder]SocketGuildUser user)
+        {
+            var newUser = new User
+            {
+                UserName = user.Mention
+            };
+
+            var selectedGames = _userGames.GetUsersGames(newUser);
+            List<string> games = new List<string>();
+
+            foreach(var m in selectedGames)
+            {
+                var newGame = new TigerGame
+                {
+                    Id = m.GameID
+                };
+
+                var getGame = _games.GetGameById(newGame);
+                string gameName = getGame.GameName;
+
+                games.Add(gameName);
+            }
+
+            StringBuilder message = new StringBuilder($"{user.Mention} has played...\n`");
+
+            games.ForEach(delegate (String name)
+            {
+                message.Append($"{name}\n");
+            });
+
+            message.Append("`");
+
             await ReplyAsync(message.ToString());
         }
     }
