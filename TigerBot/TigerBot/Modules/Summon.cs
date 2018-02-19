@@ -107,5 +107,22 @@ namespace TigerBot.Modules
 
             await ReplyAsync(message.ToString());
         }
+
+        [Command("add")]
+        public async Task AddGame([Remainder]string gameName)
+        {
+            var newGame = new TigerGame
+            {
+                GameName = gameName
+            };
+
+            // Check user table for the person who authored the message
+            // Check game table if the game already exists. Loose check or strict check?
+
+            // Insert if not exist
+
+            // Insert combo into usergame table
+        }
+
     }
 }
