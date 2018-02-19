@@ -109,19 +109,77 @@ namespace TigerBot.Modules
         }
 
         [Command("add")]
-        public async Task AddGame([Remainder]string gameName)
+        public async Task AddGame(SocketGuildUser user,[Remainder]string gameName)
+        {
+            // Create new user and new game
+            var newGame = CreateNewGame(gameName);
+            var newUser = CreateNewUser(user.Mention);
+
+            // Check user table for the specified user. Insert if not exist
+            if (!CheckUserExists(newUser))
+            {
+                _users.Add(newUser);
+            }
+            // Check game table if the game already exists. Insert if not exist
+            if (!CheckGameExists(newGame))
+            {
+                _games.Add(newGame);
+            }
+
+            // Insert combo into usergame table
+            if (!CheckUserGameExists(newGame,newUser))
+            {
+                _userGames.Add(newUser, newGame);
+            }
+
+            await ReplyAsync($"`{gameName}` successfully added to {user.Mention}'s game list!");
+        }
+
+        private User CreateNewUser(string mention)
+        {
+            var newUser = new User
+            {
+                UserName = mention
+            };
+
+            return newUser;
+        }
+
+        private TigerGame CreateNewGame(string gameName)
         {
             var newGame = new TigerGame
             {
                 GameName = gameName
             };
 
-            // Check user table for the person who authored the message
-            // Check game table if the game already exists. Loose check or strict check?
+            return newGame;
+        }
 
-            // Insert if not exist
+        private bool CheckUserExists(User user)
+        {
+            var selectedUser = _users.Get(user);
+            if (selectedUser == null)
+                return false;
 
-            // Insert combo into usergame table
+            return true;
+        }
+
+        private bool CheckGameExists(TigerGame game)
+        {
+            var selectedGame = _games.Get(game);
+            if (selectedGame == null)
+                return false;
+
+            return true;
+        }
+
+        private bool CheckUserGameExists(TigerGame game, User user)
+        {
+            var selectedUserGame = _userGames.Get(user, game);
+            if (selectedUserGame == null)
+                return false;
+
+            return true;
         }
 
     }

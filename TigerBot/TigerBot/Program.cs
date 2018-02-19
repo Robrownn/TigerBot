@@ -131,7 +131,7 @@ namespace TigerBot
             }
         }
 
-        private async Task<bool> UserGameExists(SocketGuildUser y)
+        public async Task<bool> UserGameExists(SocketGuildUser y)
         {
             var newUser = new User
             {
@@ -220,7 +220,7 @@ namespace TigerBot
             }
         }
 
-        private async Task<bool> UserExists(SocketGuildUser user)
+        public async Task<bool> UserExists(SocketGuildUser user)
         {
             var newUser = new User
             {
@@ -251,7 +251,7 @@ namespace TigerBot
             }
         }
 
-        private async Task<bool> GameExists(SocketGuildUser game)
+        public async Task<bool> GameExists(SocketGuildUser game)
         {
             var newGame = new TigerGame
             {
