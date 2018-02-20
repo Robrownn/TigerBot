@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TigerBot.Models;
@@ -30,10 +29,7 @@ namespace TigerBot.Modules
         public async Task SummonUsers([Remainder]string gameName)
         {
             // When someone specifies a game name, we need to create a TigerGame with that game name. Id is not necessary as we are searching by name
-            var newGame = new TigerGame
-            {
-                GameName = gameName
-            };
+            var newGame = CreateNewGame(gameName);
 
             // Now that we have our ad-hoc game we are going to search the usergame table for the corresponding game and return all the users who have played that game
             var selectedUsers = _userGames.GetGameUsersLoose(newGame);
@@ -75,10 +71,7 @@ namespace TigerBot.Modules
         [Command("games")]
         public async Task ListGames([Remainder]SocketGuildUser user)
         {
-            var newUser = new User
-            {
-                UserName = user.Mention
-            };
+            var newUser = CreateNewUser(user.Mention);
 
             var selectedGames = _userGames.GetUsersGames(newUser);
             List<string> games = new List<string>();

@@ -2,8 +2,6 @@
 using Google.Apis.Customsearch.v1;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Configuration;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using static Google.Apis.Customsearch.v1.Data.Result;
