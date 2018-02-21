@@ -44,16 +44,17 @@ namespace TigerBot
         
             _token = _config["Discord"];                             
             _googleToken = _config["Google"];                        
-            _conn = _config.GetConnectionString("TigerBot");           
+            _conn = _config.GetConnectionString("TigerBot");
+            _msgHistory = new Dictionary<string, List<SocketUserMessage>>();
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection()
                         .AddSingleton(_client)
                         .AddSingleton(_commands)
+                        .AddSingleton(_msgHistory)
                         .AddScoped<IUserService, UserService>()
                         .AddScoped<IGameService, GameService>()
                         .AddScoped<IUserGameService, UserGameService>()
-                        .AddSingleton<IDictionary, Dictionary<string, List<SocketUserMessage>>>()
                         .AddSingleton(new CustomsearchService(new BaseClientService.Initializer()
                         {
                             ApiKey = _googleToken,
@@ -65,7 +66,6 @@ namespace TigerBot
             _users = _services.GetRequiredService<IUserService>();
             _games = _services.GetRequiredService<IGameService>();
             _ug = _services.GetRequiredService<IUserGameService>();
-            _msgHistory = _services.GetRequiredService<IDictionary<string, List<SocketUserMessage>>>();
 
             string botToken = _token;
 
