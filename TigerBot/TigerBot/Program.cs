@@ -61,7 +61,6 @@ namespace TigerBot
             _users = _services.GetRequiredService<IUserService>();
             _games = _services.GetRequiredService<IGameService>();
             _ug = _services.GetRequiredService<IUserGameService>();
-                        
 
             string botToken = _token;
 
