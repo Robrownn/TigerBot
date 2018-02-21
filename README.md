@@ -14,7 +14,11 @@ A general purpose discord bot for a specific discord server.
 
 ## Functions
 `!summon <Game Name>` - Summons all users who have played or are currently playing a specified game.
+
 `!games <User>` - Shows a list of all games played by a specified user.
+
 `!add <User> <Game Name>` - Manually adds a game to a user's list just in case they don't have the game status option enabled.
+
 `!add <Game Name>` - Manually adds a game to the author of the command's list.
+
 `!stalk <User>` - Shows messages sent by a specified user. **(WIP)**
