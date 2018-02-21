@@ -13,6 +13,8 @@ A general purpose discord bot for a specific discord server.
 ~ The Tiger Himself
 
 ## Functions
+`!img <Search Terms>` -  Returns an image based on the search terms.
+
 `!summon <Game Name>` - Summons all users who have played or are currently playing a specified game.
 
 `!games <User>` - Shows a list of all games played by a specified user.
@@ -21,4 +23,4 @@ A general purpose discord bot for a specific discord server.
 
 `!add <Game Name>` - Manually adds a game to the author of the command's list.
 
-`!stalk <User>` - Shows messages sent by a specified user. **(WIP)**
+`!stalk <User>` - Shows messages sent by a specified user.
