@@ -1,12 +1,15 @@
 # TigerBot
 ![alt text](https://vignette.wikia.nocookie.net/forgottenrealms/images/c/cd/Weretiger-5e.png/revision/latest?cb=20171010183220)
+
 A general purpose discord bot for a specific discord server.
 
 ## Testimonials
 > I really wish this guy would just go away...
+
 ~ Sybilla
 
 > This bot shall be my new sidekick! We will root out Fortune's evil together! Side by side!
+
 ~ The Tiger Himself
 
 ## Functions
