@@ -102,6 +102,12 @@ namespace TigerBot.Modules
         }
 
         [Command("add")]
+        public async Task AddGame([Remainder]string gameName)
+        {
+            await AddGame(Context.Message.Author as SocketGuildUser, gameName);
+        }
+
+        [Command("add")]
         public async Task AddGame(SocketGuildUser user,[Remainder]string gameName)
         {
             // Create new user and new game
