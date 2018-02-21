@@ -12,6 +12,8 @@ using TigerBot.Models;
 using TigerBot.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TigerBot
 {
@@ -31,6 +33,7 @@ namespace TigerBot
         private IUserService _users;
         private IGameService _games;
         private IUserGameService _ug;
+        private IDictionary<string,List<SocketUserMessage>> _msgHistory;
 
         public async Task RunBotAsync()
         {
@@ -50,6 +53,7 @@ namespace TigerBot
                         .AddScoped<IUserService, UserService>()
                         .AddScoped<IGameService, GameService>()
                         .AddScoped<IUserGameService, UserGameService>()
+                        .AddSingleton<IDictionary, Dictionary<string, List<SocketUserMessage>>>()
                         .AddSingleton(new CustomsearchService(new BaseClientService.Initializer()
                         {
                             ApiKey = _googleToken,
@@ -61,6 +65,7 @@ namespace TigerBot
             _users = _services.GetRequiredService<IUserService>();
             _games = _services.GetRequiredService<IGameService>();
             _ug = _services.GetRequiredService<IUserGameService>();
+            _msgHistory = _services.GetRequiredService<IDictionary<string, List<SocketUserMessage>>>();
 
             string botToken = _token;
 
@@ -86,6 +91,7 @@ namespace TigerBot
                 if (!ugExist && y.Game.HasValue)
                     await AddUserGame(y);
             };
+            
 
             // Register our commands
             await RegisterCommandsAsync();
@@ -167,6 +173,16 @@ namespace TigerBot
             await channel.SendMessageAsync($"Welcome, {user.Mention}!");
         }
 
+        private Task SaveMessageHistory(SocketGuildUser user, SocketUserMessage msg)
+        {
+            if (_msgHistory.ContainsKey(user.Mention))
+                _msgHistory[user.Mention].Add(msg);
+            else
+                _msgHistory[user.Mention] = new List<SocketUserMessage> { msg };
+
+            return Task.CompletedTask;
+        }
+
         private Task Log(LogMessage arg)
         {
             Console.WriteLine(arg);
@@ -182,11 +198,16 @@ namespace TigerBot
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-
+            // Get the message
             var message = arg as SocketUserMessage;
 
+            // If the message contains nothing or the author is the bot return nothing
             if (message is null || message.Author.IsBot) return;
 
+            // Otherwise log the message in the dictionary
+            await SaveMessageHistory(message.Author as SocketGuildUser, message);
+
+            // If its a command parse it as a command.
             int argPos = 0;
 
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
