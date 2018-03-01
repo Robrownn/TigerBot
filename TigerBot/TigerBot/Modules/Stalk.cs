@@ -22,19 +22,18 @@ namespace TigerBot.Modules
         public async Task StalkUser(SocketGuildUser user)
         {
             string key = user.Mention;
+            string name = user.Username;
             var stalkMessage = await Context.Channel.SendMessageAsync($"Getting all messages from {key}...");
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.Title = $"Stalking {key}...";
+            builder.Title = $"Stalking {name}...";
             builder.Description = $"I will root out the truth from {key}'s words!";
             builder.ThumbnailUrl = user.GetAvatarUrl();
-            builder.Author.Name = Context.Message.Author.Mention;
-            builder.Author.IconUrl = Context.Message.Author.GetAvatarUrl();
             builder.Color = Color.Gold;
 
             foreach(var m in _msgHistory[key])
             {
-                builder.AddField($"{m.Timestamp.ToString()}: ", m.Content);
+                builder.AddField($"At {m.Timestamp.ToString()}, {name} said... ", m.Content);
             }
 
             await ReplyAsync("", false, builder.Build());
