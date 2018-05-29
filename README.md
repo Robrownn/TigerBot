@@ -1,7 +1,7 @@
 # TigerBot
 ![alt text](https://vignette.wikia.nocookie.net/forgottenrealms/images/c/cd/Weretiger-5e.png/revision/latest?cb=20171010183220)
 
-A general purpose discord bot for a specific discord server.
+A general purpose discord bot for a specific discord server. The reason its called TigerBot is because there's an annoying character in one of the DnD Campaign's I'm in called The Tiger. I thought it would be funny to name this bot after him.
 
 ## Testimonials
 > I really wish this guy would just go away...
@@ -13,6 +13,8 @@ A general purpose discord bot for a specific discord server.
 ~ The Tiger Himself
 
 ## Functions
+`!img <Search Terms>` -  Returns an image based on the search terms.
+
 `!summon <Game Name>` - Summons all users who have played or are currently playing a specified game.
 
 `!games <User>` - Shows a list of all games played by a specified user.
@@ -21,4 +23,4 @@ A general purpose discord bot for a specific discord server.
 
 `!add <Game Name>` - Manually adds a game to the author of the command's list.
 
-`!stalk <User>` - Shows messages sent by a specified user. **(WIP)**
+`!stalk <User>` - Shows messages sent by a specified user.
