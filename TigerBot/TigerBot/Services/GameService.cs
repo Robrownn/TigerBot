@@ -35,12 +35,17 @@ namespace TigerBot.Services
             return _context.Games.FirstOrDefault(g => g.Id == game.Id);
         }
 
+        public TigerGame GetGameById(int id)
+        {
+            return _context.Games.FirstOrDefault(g => g.Id == id);
+        }
+
         public TigerGame Update(TigerGame game)
         {
             throw new NotImplementedException();
         }
 
-        IEnumerable<TigerGame> IGameService.GetAll()
+        IQueryable<TigerGame> IGameService.GetAll()
         {
             return _context.Games.OrderBy(g => g.GameName);
         }

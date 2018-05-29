@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TigerBot.Models;
@@ -73,32 +74,20 @@ namespace TigerBot.Modules
         {
             var newUser = CreateNewUser(user.Mention);
 
-            var selectedGames = _userGames.GetUsersGames(newUser);
+            var selectedUserGames = _userGames.GetUsersGames(newUser);
             List<string> games = new List<string>();
 
-            foreach(var m in selectedGames)
+            foreach (var ug in selectedUserGames)
             {
-                var newGame = new TigerGame
-                {
-                    Id = m.GameID
-                };
-
-                var getGame = _games.GetGameById(newGame);
-                string gameName = getGame.GameName;
-
-                games.Add(gameName);
+                var game = _games.GetGameById(ug.GameID);
+                games.Add(game.GameName);
             }
 
-            StringBuilder message = new StringBuilder($"{user.Mention} has played...\n`");
-
-            games.ForEach(delegate (String name)
-            {
-                message.Append($"{name}\n");
-            });
-
-            message.Append("`");
-
-            await ReplyAsync(message.ToString());
+            var listAnnounce = $"{user.Mention} has played...";
+            var stringifiedGames = games.Aggregate(new StringBuilder(),
+                (sb, g) => sb.AppendLine(String.Join(",", g)),
+                sb => sb.ToString());
+            await ReplyAsync($"{listAnnounce}\n`{stringifiedGames}`");
         }
 
         [Command("add")]

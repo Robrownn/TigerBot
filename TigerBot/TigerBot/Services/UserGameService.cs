@@ -102,16 +102,16 @@ namespace TigerBot.Services
 
         public IQueryable<UserGame> GetUsersGames(User user)
         {
-            var selectedUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
+            var selectedUserGames = _context.Users
+                .Join(_context.UserGames,
+                u => u.Id,
+                ug => ug.UserID,
+                (u, ug) => new { User = u, UserGame = ug })
+                .Select(ug => ug.UserGame);
 
-            if (selectedUser != null)
+            if (selectedUserGames != null)
             {
-                var newUserGame = new UserGame
-                {
-                    UserID = selectedUser.Id
-                };
-
-                return _context.UserGames.Where(ug => ug.UserID == newUserGame.UserID).OrderBy(ug => ug.UserID == newUserGame.UserID);
+                return selectedUserGames;
             }
 
             return null;
