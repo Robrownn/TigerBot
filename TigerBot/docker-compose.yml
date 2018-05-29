@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  tigerbot:
+    image: tigerbot
+    build:
+      context: .
+      dockerfile: TigerBot\Dockerfile
+    container_name: "tigerbotapp"
+    depends_on:
+      - db
+
+  db:
+    image: "microsoft/mssql-server-windows-express"
+    env_file:
+      - .env
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+    container_name: "tigerbotdb"
+    hostname: "tigerbotdb"

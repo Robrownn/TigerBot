@@ -84,9 +84,11 @@ namespace TigerBot.Modules
             }
 
             var listAnnounce = $"{user.Mention} has played...";
-            var stringifiedGames = games.Aggregate(new StringBuilder(),
+            var stringifiedGames = games.Any() ? 
+                games.Aggregate(new StringBuilder(),
                 (sb, g) => sb.AppendLine(String.Join(",", g)),
-                sb => sb.ToString());
+                sb => sb.ToString()) : 
+                "No games!";
             await ReplyAsync($"{listAnnounce}\n`{stringifiedGames}`");
         }
 
