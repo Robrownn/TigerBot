@@ -67,6 +67,8 @@ namespace TigerBot
             _games = _services.GetRequiredService<IGameService>();
             _ug = _services.GetRequiredService<IUserGameService>();
 
+            GoogleCSeCredentials.Cx = _config["seID"];
+
             string botToken = _token;
 
             // Event Subscriptions

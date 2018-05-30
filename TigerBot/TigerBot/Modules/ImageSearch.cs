@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using TigerBot.Data;
 using static Google.Apis.Customsearch.v1.Data.Result;
 
 namespace TigerBot.Modules
@@ -28,10 +29,6 @@ namespace TigerBot.Modules
 
             var result = await SearchGoogleAsync(urlterms);
 
-            //var embed = new EmbedBuilder()
-            //    .WithColor(Color.Blue)
-            //    .WithTitle($"Imgur Search for: {terms}");
-
             await ReplyAsync($"Imgur Search for `{terms}`: {result.link}");
 
 
@@ -39,19 +36,13 @@ namespace TigerBot.Modules
 
         private async Task<ImageResult> SearchGoogleAsync(string terms)
         {
-            IConfigurationRoot config;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Environment.CurrentDirectory)
-                .AddJsonFile("_configuration.json");
-            config = builder.Build();
-
             var request = _cs.Cse.List(terms);
-            request.Cx = config["seID"];
+            request.Cx = GoogleCSeCredentials.Cx;
             request.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
 
             var result = await request.ExecuteAsync();
              
-            int rand = new Random().Next(0,19);
+            int rand = new Random().Next(0,9);
 
             return new ImageResult(result.Items[rand].Image, result.Items[rand].Link);
         }
